@@ -7,7 +7,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements FirstFragment.FirstClickListener,
+        SecondFragment.SecondClickListener {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -16,17 +17,11 @@ public class MainActivity extends AppCompatActivity {
         openFirstFragment(0);
     }
 
-    @Override
-     onGenerateSelected() {
-        openSecondFragment()
-    }
-
     private void openFirstFragment(int previousNumber) {
-        final Fragment firstFragment = FirstFragment.newInstance(previousNumber);
-        final FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.container, firstFragment);
-        // TODO: invoke function which apply changes of the transaction
-        transaction.commit();
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.container, FirstFragment.newInstance(previousNumber))
+                .commit();
     }
 
     private void openSecondFragment(int min, int max) {
@@ -36,5 +31,15 @@ public class MainActivity extends AppCompatActivity {
         transaction.replace(R.id.container, secondFragment);
         // TODO: invoke function which apply changes of the transaction
         transaction.commit();
+    }
+
+    @Override
+    public void onGenerateSelected(int min, int max) {
+        openSecondFragment(min, max);
+    }
+
+    @Override
+    public void onBackSelected(int value) {
+        openFirstFragment(value);
     }
 }

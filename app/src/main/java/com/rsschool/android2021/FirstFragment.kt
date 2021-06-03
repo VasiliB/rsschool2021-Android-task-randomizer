@@ -1,5 +1,6 @@
 package com.rsschool.android2021
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -39,12 +40,25 @@ class FirstFragment : Fragment() {
 
         generateButton?.setOnClickListener {
             // TODO: send min and max to the SecondFragment
-            listener?.onGenerateSelected()
+            if (min.text.toString().isNotEmpty() && max.text.toString().isNotEmpty()) {
+                val minValue = Integer.parseInt(min.text.toString())
+                val maxValue = Integer.parseInt(max.text.toString())
+                listener?.onGenerateSelected(minValue, maxValue)
+            }
+        }
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        try {
+            listener = activity as FirstClickListener
+        } catch (e: ClassCastException) {
+            throw ClassCastException("$activity must implement FirstClickListener")
         }
     }
 
     interface FirstClickListener {
-        fun onGenerateSelected()
+        fun onGenerateSelected(min : Int, max: Int)
     }
 
     companion object {

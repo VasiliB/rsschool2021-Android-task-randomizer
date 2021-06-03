@@ -1,5 +1,6 @@
 package com.rsschool.android2021
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +14,8 @@ class SecondFragment : Fragment() {
 
     private var backButton: Button? = null
     private var result: TextView? = null
+
+    var listener: SecondClickListener? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -34,7 +37,7 @@ class SecondFragment : Fragment() {
 
         backButton?.setOnClickListener {
             // TODO: implement back
-            findNavController().navigate(R.id.action_SecondFragment_to_FirstFragment)
+            listener?.onBackSelected(Integer.parseInt(result?.text.toString()))
         }
     }
 
@@ -43,16 +46,30 @@ class SecondFragment : Fragment() {
         return (min..max).random()
     }
 
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        try {
+            listener = activity as SecondClickListener
+        } catch (e: ClassCastException) {
+            throw ClassCastException("$activity must implement SecondClickListener")
+        }
+    }
+
+    interface SecondClickListener {
+        fun onBackSelected(value : Int)
+    }
+
     companion object {
 
         @JvmStatic
         fun newInstance(min: Int, max: Int): SecondFragment {
-            val fragment = SecondFragment()
-            val args = Bundle()
-
-            // TODO: implement adding arguments
-
-            return fragment
+            return SecondFragment().apply {
+                arguments = Bundle().apply {
+                    putInt(MIN_VALUE_KEY, min)
+                    putInt(MAX_VALUE_KEY, max)
+                }
+            }
         }
 
         private const val MIN_VALUE_KEY = "MIN_VALUE"
