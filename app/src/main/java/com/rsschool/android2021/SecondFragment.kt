@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 
 class SecondFragment : Fragment() {
 
@@ -33,12 +34,13 @@ class SecondFragment : Fragment() {
 
         backButton?.setOnClickListener {
             // TODO: implement back
+            findNavController().navigate(R.id.action_SecondFragment_to_FirstFragment)
         }
     }
 
     private fun generate(min: Int, max: Int): Int {
         // TODO: generate random number
-        return 0
+        return (min..max).random()
     }
 
     companion object {
